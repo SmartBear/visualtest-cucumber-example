@@ -1,5 +1,6 @@
 package io.cucumber.examples.visualtest;
 
+import com.smartbear.visualtest.VisualTest;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
@@ -8,6 +9,8 @@ import io.cucumber.java.en.When;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+
+import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 
@@ -30,10 +33,12 @@ public class StepDefinitions {
     }
 
     @When("a visitor searches for {string}")
-    public void aVisitorSearchesFor(String term) {
+    public void aVisitorSearchesFor(String term) throws Exception {
         WebElement search = this.browser.findElement(By.name("q"));
         search.sendKeys(term);
         search.submit();
+        VisualTest visualTest = new VisualTest(this.browser, System.getenv("VISUALTEST_TOKEN"));
+        visualTest.capture("Search results");
     }
 
     @Then("there should be {int} result(s)")
